@@ -1,0 +1,16 @@
+{
+  "name": "mini-coding-js",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A tiny Node coding-agent harness: ReAct loop + tools, one dependency for colour.",
+  "scripts": {
+    "start": "node src/cli.js",
+    "demo": "node src/cli.js --demo",
+    "hooks": "node src/cli.js --hooks",
+    "memory": "node src/cli.js --memory",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": { "chalk": "^5.6.2" }
+}

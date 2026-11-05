@@ -1,1 +1,7 @@
+node_modules/
+**/node_modules/
 .env
+ch*/workspace/*
+!ch*/workspace/.gitkeep
+*.log
+.DS_Store
