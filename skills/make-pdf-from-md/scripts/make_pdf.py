@@ -49,6 +49,13 @@ VOID_TAGS = {
 
 TOC_MARKER = "Page numbers refer to the folio at the foot of each page."
 
+AUTHORED_TOC_HEADING_RE = re.compile(
+    r"^#{1,6}[ \t]+(?:table of contents|contents)[ \t]*:?[ \t]*$",
+    re.I,
+)
+ANCHOR_LINK_ITEM_RE = re.compile(r"^[ \t]*[-*+][ \t]+\[[^\]]+\]\(#[^)]+\)", re.M)
+MARKDOWN_HEADING_RE = re.compile(r"^#{1,6}[ \t]+\S", re.M)
+
 
 @dataclass
 class Heading:
@@ -217,7 +224,10 @@ def read_pages(pdf_path: Path) -> list[str]:
 
 
 def locate_headings(
-    pages: list[str], headings: list[Heading], start_page: int
+    pages: list[str],
+    headings: list[Heading],
+    start_page: int,
+    skip_page: int | None = None,
 ) -> None:
     keys = [f" {page_key(text)} " for text in pages]
     current = start_page
@@ -235,6 +245,10 @@ def locate_headings(
                 continue
             needle = f" {key} "
             for index in range(current - 1, len(keys)):
+                # The generated Contents page repeats chapter titles. Skip it
+                # so a title match there is not mistaken for the real chapter.
+                if skip_page is not None and index + 1 == skip_page:
+                    continue
                 if needle in keys[index]:
                     found = index + 1
                     break
@@ -266,6 +280,63 @@ def first_match(pattern: str, text: str) -> str | None:
     value = re.sub(r"<[^>]+>", " ", match.group(1))
     value = html_lib.unescape(value)
     return re.sub(r"\s+", " ", value).strip()
+
+
+def strip_authored_toc(source: str) -> str:
+    """Remove a hand-written Markdown table of contents.
+
+    The converter injects its own printed Contents page. A source document that
+    already contains a section named ``Table of contents`` or ``Contents`` would
+    therefore print two contents lists. Remove only that authored section, and
+    only when it is followed by at least three anchor-link list items, so ordinary
+    prose sections named "Contents" are left alone. The Markdown file on disk is
+    never modified.
+    """
+    lines = source.splitlines(keepends=True)
+    index = 0
+    while index < len(lines):
+        if not AUTHORED_TOC_HEADING_RE.match(lines[index].strip()):
+            index += 1
+            continue
+
+        cursor = index + 1
+        while cursor < len(lines) and not lines[cursor].strip():
+            cursor += 1
+
+        links = 0
+        while cursor < len(lines):
+            stripped = lines[cursor].strip()
+            if not stripped or stripped.startswith("---"):
+                break
+            if MARKDOWN_HEADING_RE.match(stripped):
+                break
+            if ANCHOR_LINK_ITEM_RE.match(lines[cursor]):
+                links += 1
+                cursor += 1
+                continue
+            if lines[cursor].startswith(("  ", "\t")) and stripped:
+                cursor += 1
+                continue
+            break
+
+        if links >= 3:
+            del lines[index:cursor]
+            # A section separator often survives on both sides of the deleted
+            # TOC. Collapse only adjacent horizontal rules so the document keeps
+            # its chapter breaks without printing two rules back to back.
+            result = "".join(lines)
+            # Keep a blank line before the surviving rule. Without it,
+            # Python-Markdown treats the preceding paragraph as a setext
+            # heading and adds an unwanted chapter to the generated TOC.
+            return re.sub(
+                r"(?m)(?:\A|\n)---[ \t]*\n(?:[ \t]*\n)*---[ \t]*\n",
+                "\n\n---\n",
+                result,
+                count=1,
+            )
+        index += 1
+
+    return source
 
 
 def markdown_to_html(source: str, title: str) -> str:
@@ -551,7 +622,10 @@ def main() -> None:
     if source_path.suffix.lower() in {".md", ".markdown", ".mdown"}:
         title_match = re.search(r"^#\s+(.+)$", raw, re.M)
         document_title_hint = title_match.group(1).strip() if title_match else source_path.stem
-        source = markdown_to_html(raw, document_title_hint)
+        # When a printed Contents page will be generated, drop an authored
+        # Markdown TOC so the generated one remains the only contents list.
+        markdown_source = strip_authored_toc(raw) if not args.no_toc else raw
+        source = markdown_to_html(markdown_source, document_title_hint)
     else:
         source = raw
 
@@ -589,10 +663,12 @@ def main() -> None:
         render(browser, temp_html, first_pdf, args.timeout)
 
         toc_page = find_toc_page(read_pages(first_pdf)) if not args.no_toc else None
-        start_page = (toc_page + 1) if toc_page else 1
+        # Start from page 1 and skip the generated Contents page during the
+        # search. Headings before the Contents page still need page numbers.
+        start_page = 1
 
         if headings:
-            locate_headings(read_pages(first_pdf), headings, start_page)
+            locate_headings(read_pages(first_pdf), headings, start_page, toc_page)
             transformed = fill_page_numbers(transformed, headings)
             temp_html.write_text(transformed, encoding="utf-8")
             render(browser, temp_html, final_pdf, args.timeout)
@@ -609,7 +685,7 @@ def main() -> None:
                 or source_path.stem
             )
             if headings:
-                locate_headings(read_pages(final_pdf), headings, start_page)
+                locate_headings(read_pages(final_pdf), headings, start_page, toc_page)
             add_outline(final_pdf, output_path, headings, toc_page, document_title)
 
         print(f"PDF written: {output_path}")

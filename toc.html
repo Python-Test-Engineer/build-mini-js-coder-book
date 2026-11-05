@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build a Mini Coding Agent in JavaScript — Table of Contents</title>
+<meta name="description" content="Table of contents for Build a Mini Coding Agent in JavaScript: 17 runnable stages from a chatbot to a testable Node.js coding-agent harness.">
+<style>
+  :root {
+    --paper: #fbfaf7;
+    --ink: #1f1e1d;
+    --prose: #33302c;
+    --muted: #55524c;
+    --stone: #8c877c;
+    --line: #e0dbcf;
+    --line-soft: #ece7dc;
+    --accent: #c9633f;
+    --accent-soft: #f6ede6;
+    --sans: -apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif;
+    --serif: 'Iowan Old Style', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 3rem 1.25rem 5rem;
+    background: var(--paper);
+    color: var(--prose);
+    font: 16px/1.65 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    margin: 0 0 .75rem;
+    color: var(--accent);
+    font: 600 11px/1.4 var(--sans);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--ink);
+    font: 500 clamp(2rem, 5vw, 3rem)/1.1 var(--serif);
+    letter-spacing: -.02em;
+  }
+
+  .lede {
+    margin: .9rem 0 0;
+    max-width: 42rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+
+  .meta {
+    margin: 1rem 0 2.25rem;
+    padding-top: .9rem;
+    border-top: 1px solid var(--line);
+    color: var(--stone);
+    font: 12px/1.7 var(--mono);
+  }
+
+  .toc {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: part;
+  }
+
+  .toc ol {
+    margin: .45rem 0 .8rem 1.4rem;
+    padding: 0 0 0 1rem;
+    border-left: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .toc li {
+    position: relative;
+    margin: .3rem 0;
+  }
+
+  .toc > li {
+    margin: 0;
+    padding: .62rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .toc > li:last-child {
+    border-bottom: 0;
+  }
+
+  .label {
+    display: inline-block;
+    min-width: 5.5rem;
+    margin-right: .55rem;
+    color: var(--accent);
+    font: 600 10.5px/1.4 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .title {
+    color: var(--ink);
+    font: 500 1.08rem/1.4 var(--serif);
+  }
+
+  .toc ol .title {
+    font: 15px/1.45 var(--sans);
+    color: var(--prose);
+  }
+
+  .num {
+    display: inline-block;
+    min-width: 3.9rem;
+    color: var(--stone);
+    font: 11.5px/1.4 var(--mono);
+  }
+
+  .part > .label {
+    min-width: 4.5rem;
+  }
+
+  .phase > .label {
+    min-width: 4.5rem;
+    color: var(--stone);
+  }
+
+  .note {
+    margin: 2.5rem 0 0;
+    padding: 1rem 1.15rem;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--muted);
+    font-size: .94rem;
+  }
+
+  .note strong { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    body { padding-top: 2rem; }
+    .label, .num {
+      display: block;
+      min-width: 0;
+      margin: 0 0 .1rem;
+    }
+    .toc > li { padding: .75rem 0; }
+    .toc ol { margin-left: .4rem; }
+  }
+
+  @media print {
+    body { padding: 0; background: #fff; }
+    .page { max-width: none; }
+    .note { break-inside: avoid; }
+    .toc > li, .toc ol li { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <p class="eyebrow">Table of Contents</p>
+    <h1>Build a Mini Coding Agent in JavaScript</h1>
+    <p class="lede">A tiny Node coding-agent harness, built one runnable stage at a time.</p>
+    <p class="meta">By Craig West · 17 runnable stages · 9 tools · 9 lifecycle hooks · 1 runtime dependency</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <ol>
+      <li><span class="title">Preface</span></li>
+      <li><span class="title">Before you start</span></li>
+
+      <li class="part">
+        <span class="label">Part 0</span>
+        <span class="title">The idea before the code</span>
+      </li>
+
+      <li class="phase">
+        <span class="label">Phase A</span>
+        <span class="title">A chatbot that talks</span>
+        <ol>
+          <li><span class="num">Stage 0</span><span class="title">Scaffold</span></li>
+          <li><span class="num">Stage 1</span><span class="title">Terminal language (<code>ui.js</code>)</span></li>
+          <li><span class="num">Stage 2</span><span class="title">Config and the model client</span></li>
+          <li><span class="num">Stage 3</span><span class="title">The simplest chat loop</span></li>
+          <li><span class="num">Stage 4</span><span class="title">Conversation history</span></li>
+          <li><span class="num">Stage 5</span><span class="title">The system prompt</span></li>
+        </ol>
+      </li>
+
+      <li class="phase">
+        <span class="label">Phase B</span>
+        <span class="title">Give the chatbot hands</span>
+        <ol>
+          <li><span class="num">Stage 6</span><span class="title">Path policy</span></li>
+          <li><span class="num">Stage 7</span><span class="title">Read-only file tools</span></li>
+          <li><span class="num">Stage 8</span><span class="title">Sandbox and write tools</span></li>
+          <li><span class="num">Stage 9</span><span class="title">Command execution</span></li>
+        </ol>
+      </li>
+
+      <li class="phase">
+        <span class="label">Phase C</span>
+        <span class="title">Memory and observability</span>
+        <ol>
+          <li><span class="num">Stage 10</span><span class="title">Long-term memory</span></li>
+          <li><span class="num">Stage 11</span><span class="title">Lifecycle hooks</span></li>
+        </ol>
+      </li>
+
+      <li class="phase">
+        <span class="label">Phase D</span>
+        <span class="title">The agent loop and polish</span>
+        <ol>
+          <li><span class="num">Stage 12</span><span class="title">The ReAct loop</span></li>
+          <li><span class="num">Stage 13</span><span class="title">Offline demo</span></li>
+          <li><span class="num">Stage 14</span><span class="title">Sessions, trimming and CLI polish</span></li>
+        </ol>
+      </li>
+
+      <li class="phase">
+        <span class="label">Phase E</span>
+        <span class="title">Hardening and documentation</span>
+        <ol>
+          <li><span class="num">Stage 15</span><span class="title">The full test suite</span></li>
+          <li><span class="num">Stage 16</span><span class="title">Documentation and final acceptance</span></li>
+        </ol>
+      </li>
+
+      <li class="part">
+        <span class="label">Appendices</span>
+        <span class="title">Protocol, safety, bounds, debugging, glossary and reading map</span>
+        <ol>
+          <li><span class="num">A</span><span class="title">The message protocol</span></li>
+          <li><span class="num">B</span><span class="title">The safety model in one page</span></li>
+          <li><span class="num">C</span><span class="title">Every bound and cap</span></li>
+          <li><span class="num">D</span><span class="title">Debugging by symptom</span></li>
+          <li><span class="num">E</span><span class="title">Glossary</span></li>
+          <li><span class="num">F</span><span class="title">Reading the finished code</span></li>
+        </ol>
+      </li>
+
+      <li class="part">
+        <span class="label">Part II</span>
+        <span class="title">The teacher's handbook</span>
+      </li>
+
+      <li class="part">
+        <span class="label">Part III</span>
+        <span class="title">The student workbook</span>
+      </li>
+
+      <li class="part">
+        <span class="label">Part IV</span>
+        <span class="title">Deep dives on harness engineering</span>
+      </li>
+
+      <li class="part">
+        <span class="label">Part V</span>
+        <span class="title">Reference</span>
+        <ol>
+          <li><span class="num">A</span><span class="title">Configuration reference</span></li>
+          <li><span class="num">B</span><span class="title">CLI and exit-code reference</span></li>
+          <li><span class="num">C</span><span class="title">Tool response reference</span></li>
+          <li><span class="num">D</span><span class="title">Hook payload reference</span></li>
+          <li><span class="num">E</span><span class="title">File and API map</span></li>
+          <li><span class="num">F</span><span class="title">Final acceptance checklist</span></li>
+          <li><span class="num">G</span><span class="title">Function reference</span></li>
+          <li><span class="num">H</span><span class="title">Architecture Q&amp;A</span></li>
+        </ol>
+      </li>
+
+      <li><span class="title">About the author</span></li>
+    </ol>
+  </nav>
+
+  <p class="note"><strong>Build order:</strong> each stage is a complete, runnable Node project. By Stage 3 the program is a chatbot; by Stage 12 it is a testable ReAct loop with tools, memory, hooks and a workspace sandbox.</p>
+</main>
+</body>
+</html>

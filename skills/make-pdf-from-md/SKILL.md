@@ -101,19 +101,20 @@ The converter handles normal Markdown, including tables, fenced code blocks, blo
   ```
 - Use pipe tables for tabular material. Wrap long cell text normally; the print CSS handles the layout.
 
-Do not add a manual Contents section. The script generates one from the `h2` headings. If the source already contains a `nav.print-toc` or `nav.pdf-toc` block, the script removes it before injecting its own.
+Do not add a manual Contents section. The script generates one from the `h2` headings. If the source already contains a `nav.print-toc` or `nav.pdf-toc` block, the script removes it before injecting its own. It also removes an authored Markdown section headed `Table of contents` or `Contents` when it contains at least three anchor-link list items. This prevents the common duplicate-TOC result: a generated printed Contents page plus the document's own hand-written contents list. The generated Contents page is kept; the authored section is dropped only for the PDF render, never from the Markdown file on disk. If you pass `--no-toc`, the authored section is left in place because there is no generated Contents page to duplicate.
 
 ## How it works
 
 1. Read the Markdown source.
-2. Convert it to HTML with Python-Markdown (`extra`, `sane_lists`, `toc` extensions).
-3. Wrap the HTML in `assets/print.css` and add light structural classes (eyebrow, lede, code caption, callout).
-4. Remove any previous print Contents block and inject a new `nav.pdf-toc` after the title block and before the first `h2`.
-5. Render pass 1 with placeholder page numbers.
-6. Read the PDF with `pypdf`, locate each `h2` heading's page, and replace the placeholders with the real page numbers.
-7. Render pass 2.
-8. Build the PDF outline (title, Contents, chapters, nested sections), set `/PageMode /UseOutlines`, and write the final PDF.
-9. Delete temporary files unless `--keep-html` was requested.
+2. If a printed Contents page will be generated, remove an authored Markdown `Table of contents`/`Contents` section when it is followed by anchor-link list items. This keeps the generated page as the only contents list.
+3. Convert the cleaned Markdown to HTML with Python-Markdown (`extra`, `sane_lists`, `toc` extensions).
+4. Wrap the HTML in `assets/print.css` and add light structural classes (eyebrow, lede, code caption, callout).
+5. Remove any previous print Contents block and inject a new `nav.pdf-toc` after the title block and before the first `h2`.
+6. Render pass 1 with placeholder page numbers.
+7. Read the PDF with `pypdf`, locate each `h2` heading's page, and replace the placeholders with the real page numbers.
+8. Render pass 2.
+9. Build the PDF outline (title, Contents, chapters, nested sections), set `/PageMode /UseOutlines`, and write the final PDF.
+10. Delete temporary files unless `--keep-html` was requested.
 
 The printed Contents page uses a marker sentence: *Page numbers refer to the folio at the foot of each page.* The script uses it to find and skip the Contents page when locating chapter headings.
 
@@ -150,6 +151,7 @@ The Contents page numbers must match where each chapter actually starts. If a he
 - **Browser not found:** pass `--browser` or set `CHROME_PATH`.
 - **`markdown` or `pypdf` missing:** run `python -m pip install markdown pypdf`.
 - **Heading not found:** make sure it is real visible `h2` text, not an image, and that it is not inside `script`, `style`, `aside`, or a pre-existing print Contents block.
+- **Two contents lists in the PDF:** remove the authored Markdown `Table of contents` section, or let the script remove it automatically. The script drops a `Table of contents`/`Contents` heading followed by at least three anchor-link list items when a generated Contents page is enabled.
 - **Blank page after Contents:** avoid adding both `break-before: page` and `break-after: page` around the generated Contents page. The bundled CSS uses `break-before` on the Contents page and `break-before` on `h2` chapters; the two collapse into one break.
 - **Code or table overflows the page:** keep `white-space: pre-wrap` and `overflow-wrap: anywhere` on `pre` (already in `assets/print.css`). Very wide tables may need fewer columns or shorter prose.
 - **Wrong page numbers:** confirm the Contents marker text is present and not edited. The script uses it to find the Contents page.
@@ -163,3 +165,4 @@ The Contents page numbers must match where each chapter actually starts. If a he
 - Set `/PageMode /UseOutlines` explicitly. Adding bookmarks alone does not make every viewer open the left pane.
 - Keep chapters at the top outline level and `h3` sections nested. Do not flatten the tree.
 - Keep the Markdown source as the single editable source of truth; never hand-edit the generated HTML.
+- Generate one contents list, not two. If the Markdown already has an authored TOC and the converter generates a printed Contents page, remove the authored section during conversion rather than shipping both.

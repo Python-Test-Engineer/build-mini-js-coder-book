@@ -64,7 +64,8 @@ The repository contains:
 - **`ch00/` through `ch16/`** — one standalone project per stage, with `src/`, `test/` and a `CHAPTER.md` run sheet;
 - **`plan.md`** — the concise build contract for every stage;
 - **`skills/chapter-requirements/references/DEVIATIONS.md`** — every intentional difference between the book, the plan and the code;
-- **`function-reference.md`** — a function-by-function index of the finished source: [open it on GitHub](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md).
+- **`function-reference.md`** — a function-by-function index of the finished source: [open it on GitHub](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md);
+- **`qa.html`** — a single-file student Q&A companion with 185 questions across 18 architecture areas: [open it on GitHub](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/qa.html) or open the local file in a browser.
 
 Each stage below links to its folder on GitHub. The local folder and the GitHub folder are the same snapshot.
 
@@ -89,9 +90,11 @@ For every stage, follow the same loop:
 3. **Run it.** Use the commands in the chapter. The program should do something new.
 4. **Prove it.** Tick every acceptance box. If a box fails, read the failing module and its test before moving on.
 5. **Read the code.** Follow the import order in the snapshot, starting with the module named under *Read first*. Every file opens with a block comment explaining its job, and the non-obvious branches are commented inline.
-6. **Reflect.** Answer the checkpoint questions, then read *What this stage is really about* for the deeper explanation.
+6. **Reflect.** Answer the checkpoint questions, then read *What this stage is really about* for the deeper explanation. If you want the same contract stated a second way, open the matching section of [`qa.html`](qa.html).
 
 A stage is done when the program does something new **and** every acceptance box is ticked. "It compiled" is not a stage.
+
+Two references support the whole book: [`qa.html`](qa.html) for short conceptual answers and [`function-reference.md`](function-reference.md) for the symbol-by-symbol code map. Use them after you have made a prediction, not instead of making one.
 
 ### The promise
 
@@ -185,7 +188,6 @@ After this book, every coding agent you meet will look like a variation on a pro
   - [10. How real harnesses compare](#10-how-real-harnesses-compare)
   - [11. Reading list](#11-reading-list)
 - [Part V: Reference](#part-v-reference)
-- [About the author](#about-the-author)
   - [A. Configuration reference](#a-configuration-reference)
   - [B. CLI and exit-code reference](#b-cli-and-exit-code-reference)
   - [C. Tool response reference](#c-tool-response-reference)
@@ -193,6 +195,8 @@ After this book, every coding agent you meet will look like a variation on a pro
   - [E. File and API map](#e-file-and-api-map)
   - [F. Final acceptance checklist](#f-final-acceptance-checklist)
   - [G. Function reference](#g-function-reference)
+  - [H. Architecture Q&A](#h-architecture-qa)
+- [About the author](#about-the-author)
 
 ---
 
@@ -216,7 +220,7 @@ For every stage, follow the same loop:
 3. **Run it.** Use the commands under *Run it*. The program should do something new.
 4. **Prove it.** Tick every acceptance box. If a box fails, read the module named in the error and its matching test.
 5. **Read the code.** Start with the file named under *Read first*, then follow the import order. Every source file begins with a block comment explaining its purpose, and non-obvious branches carry inline comments.
-6. **Reflect.** Answer the checkpoint questions, then read *What this stage is really about* for the deeper explanation.
+6. **Reflect.** Answer the checkpoint questions, then read *What this stage is really about* for the deeper explanation. For a second explanation of the same contract, open the matching section of [`qa.html`](qa.html) or look up the named symbol in [`function-reference.md`](function-reference.md).
 
 A stage is done when the program does something new **and** every acceptance box is ticked. "It compiled" is not a stage.
 
@@ -5023,6 +5027,8 @@ This part is for the person running the room. It assumes you have read Parts 0�
 
 **The promise to teachers:** every stage has a runnable artefact, an observable failure mode, and a demo that fits on one screen. You do not need a live model for most of the best moments; the offline demo and the tests are often more reliable than a network call.
 
+**The companion references:** [`qa.html`](qa.html) supplies direct answers to 185 "why" and "what happens if" questions, grouped by architecture area. Use it for office hours, cold-call prompts and revision after students have made a prediction. [`function-reference.md`](function-reference.md) is the symbol-level map when a student asks where a behaviour lives. Neither replaces the snapshots and tests; they shorten the distance to them.
+
 ## 2. Learning outcomes by phase
 
 Use these as the spine of your assessment. A student who can do the right-hand column has learned the phase, not just completed it.
@@ -5319,6 +5325,7 @@ The theory tells you how the harness works. The stage instructions above tell yo
 - Keep a `lab-notes.md`. For each lab, write: what you predicted, what happened, and what you changed in your mental model. The middle item is the one that teaches.
 - When a lab asks "explain", write two or three sentences in your own words. If you cannot, you have found the next thing to re-read.
 - Treat the **break-it labs** as the real test. Anyone can make the happy path work. A harness engineer is someone who knows how it fails.
+- Keep [`qa.html`](qa.html) and [`function-reference.md`](function-reference.md) nearby. When a lab asks you to explain a contract, answer from memory first; then use the Q&A to check the explanation and the function reference to find the exact code. A reference is for confirming a mental model, not for replacing one.
 
 ## 2. Per-stage labs
 
@@ -6263,11 +6270,11 @@ Notes:
 
 ## G. Function reference
 
-The full function-by-function index for the finished `src/` lives in the repository, next to the code it describes:
+[`function-reference.md`](function-reference.md) · [GitHub](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md)
 
-**[function-reference.md](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md)**
+## H. Architecture Q&A
 
-It includes an alphabetical index and a section per file, covering every class, function and method. It is linked rather than copied into this book so that the reference and the implementation are updated together.
+[`qa.html`](qa.html) · [GitHub](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/qa.html)
 
 ---
 
@@ -6281,5 +6288,7 @@ The course files for this book are public:
 
 - **Book and chapters:** [https://github.com/Python-Test-Engineer/build-mini-js-coder-book](https://github.com/Python-Test-Engineer/build-mini-js-coder-book)
 - **This book:** [https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/mini-js-coding-harness.md](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/mini-js-coding-harness.md)
+- **Student Q&A:** [https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/qa.html](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/qa.html)
+- **Code reference:** [https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md](https://github.com/Python-Test-Engineer/build-mini-js-coder-book/blob/main/function-reference.md)
 
 *End of book.*
