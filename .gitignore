@@ -5,3 +5,5 @@ ch*/workspace/*
 !ch*/workspace/.gitkeep
 *.log
 .DS_Store
+.pi/
+mini-js-coding-harness.pdf
